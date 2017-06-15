@@ -18,6 +18,7 @@ public class User {
     List<String> needs = new ArrayList<>();
     List<String> offers = new ArrayList<>();
     String image;
+    String tag;
     String location;
     String id;
 
@@ -39,6 +40,10 @@ public class User {
 
     public String getIndustry() {
         return industry;
+    }
+
+    public String getTag() {
+        return tag;
     }
 
     public String getId() {
@@ -79,5 +84,9 @@ public class User {
 
     public void addOffer(String offer) {
         this.offers.add(offer);
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }
