@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
     @Bind(R.id.industrySpinner) Spinner mIndustrySpinner;
     @Bind(R.id.signUpButton) Button mSignUpButton;
     @Bind(R.id.nameEditText) TextView mNameEditText;
@@ -64,6 +65,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mIndustrySpinner.setAdapter(adapter);
 
+        mIndustrySpinner.setOnItemSelectedListener(this);
+
         mAuth = FirebaseAuth.getInstance();
         createAuthStateListener();
 
@@ -81,7 +84,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v == mSignUpButton) {
-            createNewUser();
+
+            if (mIndustry == null){
+                Toast.makeText(SignUpActivity.this, "Choose your Industry!",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                createNewUser();
+
+            }
         }
         if (v == mSignInTextView) {
             Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
@@ -98,8 +108,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mEmail = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
-        mIndustry = "my industry!";
-
         boolean validEmail = isValidEmail(mEmail);
         boolean validName = isValidName(mName);
 
@@ -211,4 +219,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mIndustry = parent.getItemAtPosition(position).toString();
+        Log.d("INDUSTRY", mIndustry);
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        mIndustry = "null";
+    }
 }
