@@ -11,10 +11,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     @Bind(R.id.industrySpinner) Spinner mIndustrySpinner;
-    @Bind(R.id.signUpbutton) Button mSignUpButton;
+    @Bind(R.id.signUpButton) Button mSignUpButton;
     @Bind(R.id.signInTextView) TextView mSignInTextView;
 
 
@@ -23,6 +24,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        ButterKnife.bind(this);
 
         mSignUpButton.setOnClickListener(this);
         mSignInTextView.setOnClickListener(this);
