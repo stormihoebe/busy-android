@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="industries_array">
+        <item>Food/Beverage</item>
+        <item>Marketing</item>
+        <item>Business Admin</item>
+        <item>Technology</item>
+        <item>Mechanical/Maintenance</item>
+    </string-array>
+
+</resources>
