@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.auth.api.model.StringList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,6 +28,8 @@ import butterknife.ButterKnife;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
     @Bind(R.id.industrySpinner) Spinner mIndustrySpinner;
     @Bind(R.id.signUpButton) Button mSignUpButton;
+    @Bind(R.id.nameEditText) TextView mNameEditText;
+
     @Bind(R.id.signInTextView) TextView mSignInTextView;
     @Bind(R.id.emailEditText) EditText mEmailEditText;
     @Bind(R.id.passwordEditText) EditText mPasswordEditText;
@@ -33,6 +37,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private ProgressDialog mAuthProgressDialog;
+
+    private String mName;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +52,24 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         mSignUpButton.setOnClickListener(this);
         mSignInTextView.setOnClickListener(this);
 
+
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.industries_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mIndustrySpinner.setAdapter(adapter);
 
         mAuth = FirebaseAuth.getInstance();
         createAuthStateListener();
+
+        createAuthProgressDialog();
+
+    }
+
+    private void createAuthProgressDialog() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading...");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
     }
 
     @Override
@@ -67,21 +87,28 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     }
     private void createNewUser() {
+        mName = mNameEditText.getText().toString().trim();
+
         final String email = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
 
         boolean validEmail = isValidEmail(email);
-        boolean validPassword = isValidPassword(password, confirmPassword);
-        if (!validEmail || !validPassword) return;
+        boolean validName = isValidName(mName);
 
+        boolean validPassword = isValidPassword(password, confirmPassword);
+        if (!validEmail || !validName || !validPassword) return;
+
+        mAuthProgressDialog.show();
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                        mAuthProgressDialog.dismiss();
 
+                        if (task.isSuccessful()) {
+                            createFirebaseUserProfile(task.getResult().getUser());
                         } else {
                             Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -114,7 +141,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         return isGoodEmail;
     }
-
+    private boolean isValidName(String name) {
+        if (name.equals("")) {
+            mNameEditText.setError("Please enter your name");
+            return false;
+        }
+        return true;
+    }
 
     private boolean isValidPassword(String password, String confirmPassword) {
         if (password.length() < 6) {
@@ -126,6 +159,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
         return true;
     }
+
+    private void createFirebaseUserProfile(final FirebaseUser user) {
+
+        UserProfileChangeRequest addProfileName = new UserProfileChangeRequest.Builder()
+                .setDisplayName(mName)
+                .build();
+
+        user.updateProfile(addProfileName)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                        }
+                    }
+
+                });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
