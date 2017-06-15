@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.auth.api.model.StringList;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -41,6 +43,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private ProgressDialog mAuthProgressDialog;
 
     private String mName;
+    private String mIndustry;
+    private String mEmail;
+
+    private String uid;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +95,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private void createNewUser() {
         mName = mNameEditText.getText().toString().trim();
 
-        final String email = mEmailEditText.getText().toString().trim();
+        mEmail = mEmailEditText.getText().toString().trim();
         String password = mPasswordEditText.getText().toString().trim();
         String confirmPassword = mConfirmPasswordEditText.getText().toString().trim();
+        mIndustry = "my industry!";
 
-        boolean validEmail = isValidEmail(email);
+        boolean validEmail = isValidEmail(mEmail);
         boolean validName = isValidName(mName);
 
         boolean validPassword = isValidPassword(password, confirmPassword);
@@ -101,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         mAuthProgressDialog.show();
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(mEmail, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -123,6 +130,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 final FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+
+                    User newUser = new User(mName, mEmail, mIndustry);
+                    uid = user.getUid();
+                    DatabaseReference userRef = FirebaseDatabase
+                            .getInstance()
+                            .getReference("users")
+                            .child(uid);
+
+
+                    newUser.setId(uid);
+                    userRef.setValue(newUser);
+
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
