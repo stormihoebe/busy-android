@@ -1,21 +1,27 @@
 package com.stormhoebe.busy;
 
+import org.parceler.Parcel;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Guest on 6/15/17.
  */
 
+@Parcel
 public class User {
     String name;
     String email;
     String industry;
-    ArrayList<String> needs;
-    ArrayList<String> offers;
+    List<String> needs = new ArrayList<>();
+    List<String> offers = new ArrayList<>();
     String image;
     String location;
     String id;
+
+    public User() {}
 
     public User(String name, String email, String industry) {
         this.name = name;
@@ -37,6 +43,14 @@ public class User {
 
     public String getId() {
         return id;
+    }
+
+    public List<String> getNeeds(){
+        return this.needs;
+    }
+
+    public List<String> getOffers() {
+        return offers;
     }
 
     public String getImage() {
