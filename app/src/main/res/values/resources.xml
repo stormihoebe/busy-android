@@ -6,6 +6,7 @@
         <item>Business Admin</item>
         <item>Technology</item>
         <item>Mechanical/Maintenance</item>
+        <item>Other</item>
     </string-array>
 
 </resources>
