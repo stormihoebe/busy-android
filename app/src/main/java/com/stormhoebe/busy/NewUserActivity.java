@@ -50,6 +50,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
 
             boolean goodFields = checkFields();
+
             if (goodFields) {
                 updateUser();
 
