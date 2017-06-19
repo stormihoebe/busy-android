@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if (v == mOfferButton) {
+            FragmentManager fm = getFragmentManager();
+            OffersFragment newOffersFragmet = new OffersFragment();
+            newOffersFragmet.show(fm, "Offers Fragment");
 
         }
         if (v == mNeedButton) {
