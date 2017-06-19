@@ -33,10 +33,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private String mLocation;
     private String mImage;
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private String uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,11 +60,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         Log.d("mImage", mImage);
 
 
-
-        String name = "name";
-        String email = "email";
-        String industry = "industry";
-
         if (mType.equals("")){
             mTypeEditText.setError("Please enter business type");
             return;
@@ -77,27 +68,21 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
             mLocationEditText.setError("Please enter business location");
             return;
         }
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
         Log.d("THIS IS UID", uid);
 
-        User updatedUser = new User(name, email, industry);
-        updatedUser.setLocation(mLocation);
-        updatedUser.setTag(mType);
-        updatedUser.setImage(mImage);
-        updatedUser.setId(uid);
 
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-        mDatabase.child(uid).setValue(updatedUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Intent intent = new Intent(NewUserActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        mDatabase.child("type").setValue(mType);
+        mDatabase.child("location").setValue(mLocation);
+        mDatabase.child("image").setValue(mImage);
 
-            }
-        });
 
+        Intent intent = new Intent(NewUserActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
 
     }
 

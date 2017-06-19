@@ -16,8 +16,12 @@
         android:text="Welcome, New User"
         android:textSize="24sp"
         android:textAlignment="center"
-        tools:layout_editor_absoluteY="16dp"
-        tools:layout_editor_absoluteX="87dp" />
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/newUserHeaderTextView2"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/newUserHeaderTextView2"
@@ -25,8 +29,12 @@
         android:layout_height="57dp"
         android:textAlignment="center"
         android:text="Just a few questions and you'll be making business partners in no time."
-        tools:layout_editor_absoluteY="65dp"
-        tools:layout_editor_absoluteX="45dp" />
+        android:layout_marginBottom="66dp"
+        app:layout_constraintBottom_toTopOf="@+id/typeEditText"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <EditText
         android:id="@+id/imageEditText"
