@@ -68,4 +68,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
+
+    //// TODO: 6/19/17  (Day 1) Where I'm at: The app currently has the ability to update users needs and offers.
+    // TODO: 6/19/17 (Day 2) Next Step: Matcherioni and Cheese! I have to query the database to match users partners.
+    // TODO: 6/19/17 Breaking that down: 1. For each need a user has, go to the needs node, find the corresponding offer node, collect UID's for users under that offer.
+    // TODO: 6/19/17 Breaking that down: 2. Find each user that corresponds with that ID. Display those offerers to the current user.
+    // TODO: 6/19/17(Day 3) Moving Forward: Allow user to select if they are interested (swiping right) or not interested. Collect "Interested" in new node "matches"
+    // TODO: 6/19/17 (Day 4?) Making matches: When both parties swipe right, notify both users and exchange contact information.
+    // TODO: 6/19/17 Extra goodies: add yelp info using yelp API
+
 }
