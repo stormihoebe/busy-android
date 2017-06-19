@@ -63,11 +63,18 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
 
             userNeedsRef.removeValue();
 
+            DatabaseReference needsNodeRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference("needs");
+
             for (Need need: needArrayList) {
                 String needName = need.getNeed();
                 if (need.getSelected()){
                     userNeedsRef.child(needName).setValue(needName);
-
+                    needsNodeRef.child(needName).child(uid).setValue(uid);
+                }
+                if (!need.getSelected()){
+                    needsNodeRef.child(needName).child(uid).removeValue();
                 }
             }
 

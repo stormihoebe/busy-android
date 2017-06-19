@@ -8,8 +8,6 @@ import java.util.List;
 
 public class Need {
     private String need;
-    private String id;
-    private List<String> usersInNeed;
     private boolean isSelected;
 
 
@@ -21,13 +19,6 @@ public class Need {
         this.need = need;
     }
 
-    public String getNeedId() {
-        return id;
-    }
-
-    public List<String> getUsersInNeed() {
-        return usersInNeed;
-    }
     public boolean getSelected() {
         return isSelected;
     }
