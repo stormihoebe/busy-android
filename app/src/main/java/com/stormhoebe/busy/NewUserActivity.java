@@ -11,8 +11,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,42 +50,60 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == mContinueButton) {
+            addUserInfo();
+        }
+
+    }
+
+    private void addUserInfo() {
+        mType = mTypeEditText.getText().toString().trim();
+        mLocation = mLocationEditText.getText().toString().trim();
+        mImage = mImageEditText.getText().toString().trim();
+        Log.d("mType", mType);
+        Log.d("mLocation", mLocation);
+        Log.d("mImage", mImage);
 
 
-            boolean goodFields = checkFields();
 
-            if (goodFields) {
-                updateUser();
+        String name = "name";
+        String email = "email";
+        String industry = "industry";
 
-            } else {
-                Log.d("THESE FIELDS", "THEY ARE NO GOOD");
+        if (mType.equals("")){
+            mTypeEditText.setError("Please enter business type");
+            return;
+        }
+        if (mLocation.equals("")){
+            mLocationEditText.setError("Please enter business location");
+            return;
+        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = user.getUid();
+        Log.d("THIS IS UID", uid);
+
+        User updatedUser = new User(name, email, industry);
+        updatedUser.setLocation(mLocation);
+        updatedUser.setTag(mType);
+        updatedUser.setImage(mImage);
+        updatedUser.setId(uid);
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+        mDatabase.child(uid).setValue(updatedUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Intent intent = new Intent(NewUserActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+
             }
+        });
 
-        }
 
     }
 
-    private boolean checkFields() {
-        mType = mTypeEditText.toString().trim();
-        mLocation = mLocationEditText.toString().trim();
-        mImage = mImageEditText.toString().trim();
-
-        if (mType == "" || mLocation == "") {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private void updateUser() {
-        mType = mTypeEditText.toString().trim();
-        mLocation = mLocationEditText.toString().trim();
-        mImage = mImageEditText.toString().trim();
 
 
-        Intent intent = new Intent(NewUserActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
 
-    }
+
+
 }
