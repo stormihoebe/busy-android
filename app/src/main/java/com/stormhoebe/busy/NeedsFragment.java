@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 
@@ -20,7 +25,7 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
     private ArrayList<Need> needArrayList;
     private CustomAdapter customAdapter;
     private Button allButton, noneButton, mSubmitButton;
-    private  String[] needsList = new String[]{"Coffee/Tea", "Auto Repair", "Laundry", "Delivery", "Accounting", "Web Development", "Interior Decorating", "Catering", "Cleaning Service"};
+    private  String[] needsList = new String[]{"Coffee", "Auto Repair", "Laundry", "Delivery", "Accounting", "Web Development", "Interior Decorating", "Catering", "Cleaning Service"};
 
 
     @Override
@@ -48,6 +53,24 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v == mSubmitButton){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String uid = user.getUid();
+
+            DatabaseReference userNeedsRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference("users")
+                    .child(uid).child("needs");
+
+            userNeedsRef.removeValue();
+
+            for (Need need: needArrayList) {
+                String needName = need.getNeed();
+                if (need.getSelected()){
+                    userNeedsRef.child(needName).setValue(needName);
+
+                }
+            }
+
             dismiss();
         }
         if (v == allButton) {
