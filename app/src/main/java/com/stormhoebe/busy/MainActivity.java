@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             usersOfferingWhatCurrentUserNeeds.add(dataSnapshot.getKey());
                             Log.d("USERSOFFERING", usersOfferingWhatCurrentUserNeeds.size() +"");
-
+                            //// TODO: 6/20/17 Here we have the list of users!! We just can't get to it elsewhere.  
                         }
 
                         @Override
