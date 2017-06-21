@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,20 +31,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, NeedsFragment.OnSubmitButtonSelectedListener{
     @Bind(R.id.needButton) Button mNeedButton;
     @Bind(R.id.offerButton) Button mOfferButton;
-    @Bind(R.id.businessRecyclerView) RecyclerView mRecyclerView;
+    @Bind(R.id.findPartnersButton) Button mFindPartnersButton;
 
     private FirebaseUser user;
-    private DatabaseReference currentUserRef;
-    private DatabaseReference needsRef;
+
     private DatabaseReference offersRef;
     private List<String> userNeeds;
-    private List<String> userOffers;
-    private List<String> usersOfferingWhatCurrentUserNeeds;
-    private List<String> usersNeedingWhatCurrentUserOffers;
-    List<String> list;
+    private List<String> userList;
+    private String[] userArray;
 
 
     @Override
@@ -55,112 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mNeedButton.setOnClickListener(this);
         mOfferButton.setOnClickListener(this);
+        mFindPartnersButton.setOnClickListener(this);
         user =  FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
 
-        setUpFirebaseAdapter();
-
-        currentUserRef = FirebaseDatabase.getInstance().getReference("users").child(uid);
-        needsRef = FirebaseDatabase.getInstance().getReference("needs");
         offersRef = FirebaseDatabase.getInstance().getReference("offers");
 
         userNeeds = new ArrayList<>();
-        userOffers= new ArrayList<>();
-        usersOfferingWhatCurrentUserNeeds = new ArrayList<>();
-        usersNeedingWhatCurrentUserOffers = new ArrayList<>();
+        userList= new ArrayList<>();
+        userArray = new String[0];
 
-        getMatches();
-
-    }
-
-
-
-    public void getMatches() {
-        //get current users needs
-        Query userNeedsQuery = currentUserRef.child("needs").orderByKey();
-
-        userNeedsQuery.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                userNeeds.add(dataSnapshot.getKey());
-                getUsersForNeeds();
-                Log.d("USERSOFFERING5", usersOfferingWhatCurrentUserNeeds.size() +"");
-
-
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
-        public void getUsersForNeeds() {
-            //for each need in user need list, check offers node for that need and get users who are offering
-            for (String need : userNeeds) {
-
-                if (offersRef.child(need)!= null){
-                    Query getUsersOfferingNeedsQuery = offersRef.child(need).orderByKey();
-                    getUsersOfferingNeedsQuery.addChildEventListener(new ChildEventListener() {
-
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            usersOfferingWhatCurrentUserNeeds.add(dataSnapshot.getKey());
-                            Log.d("USERSOFFERING", usersOfferingWhatCurrentUserNeeds.size() +"");
-                            //// TODO: 6/20/17 Here we have the list of users!! We just can't get to it elsewhere.  
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-
-                    });
-                    Log.d("USERSOFFERING2", usersOfferingWhatCurrentUserNeeds.size() +"");
-
-                }
-                Log.d("USERSOFFERING3", usersOfferingWhatCurrentUserNeeds.size() +"");
-
-            }
-            Log.d("USERSOFFERING4", usersOfferingWhatCurrentUserNeeds.size() +"");
-
-        };
-
-
-    private void setUpFirebaseAdapter() {
-//// TODO: 6/20/17 Gotta do this???
     }
 
     @Override
@@ -173,9 +75,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (v == mNeedButton) {
             FragmentManager fm = getFragmentManager();
-            NeedsFragment newNeedsFragment =new NeedsFragment();
+            NeedsFragment newNeedsFragment = new NeedsFragment();
             newNeedsFragment.show(fm, "Needs Fragment");
         }
+        if (v == mFindPartnersButton) {
+            if (userArray.length > 0){
+                Intent intent = new Intent(MainActivity.this, ShippingActivity.class);
+                intent.putExtra("userList", userArray);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+            if(userArray.length < 1) {
+                Toast.makeText(MainActivity.this, "Update your needs to find more partnerships!",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    }
+
+    public void getUsersForNeeds(List<String> userNeeds) {
+        Log.d("I AM GOING TO ", "get users for needs!");
+        userList = new ArrayList<>();
+
+        //for each need in user need list, check offers node for that need and get users who are offering
+        for (String need : userNeeds) {
+
+
+            if (offersRef.child(need)!= null){
+
+                Query getUsersOfferingNeedsQuery = offersRef.child(need).orderByKey();
+                getUsersOfferingNeedsQuery.addChildEventListener(new ChildEventListener() {
+
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        userList.add(dataSnapshot.getKey());
+                        Log.d("FIRST userList Size", userList.size()+"");
+
+                        setUserList(userList);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+                });
+
+            }
+
+        }
+    };
+
+    public void setUserList(List<String> users) {
+        userList = users;
+        userArray = userList.toArray(new String[userList.size()]);
 
     }
 
@@ -211,4 +180,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         finish();
     }
 
+    @Override
+    public void onNeedsSelected(List<String> needsList) {
+        userNeeds = needsList;
+        getUsersForNeeds(userNeeds);
+    }
 }
