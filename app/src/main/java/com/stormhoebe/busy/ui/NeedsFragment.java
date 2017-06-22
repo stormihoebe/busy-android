@@ -1,13 +1,7 @@
-package com.stormhoebe.busy;
+package com.stormhoebe.busy.ui;
 
-import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +10,11 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
+import com.stormhoebe.busy.CustomAdapter;
+import com.stormhoebe.busy.R;
+import com.stormhoebe.busy.models.Need;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +25,7 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
     private ArrayList<Need> needArrayList;
     private CustomAdapter customAdapter;
     private Button allButton, noneButton, mSubmitButton;
-    private  String[] needsList = new String[]{"Coffee", "Auto Repair", "Laundry", "Delivery", "Accounting", "Web Development", "Interior Decorating", "Catering", "Cleaning Service"};
+    private  String[] needsList = new String[]{"Coffee", "Gelato and Ice Cream", "Prepared Foods", "Catering", "Auto Repair", "Cleaning Service", "Laundry" , "Interior Decorating", "Delivery", "Accounting", "Legal Assistance", "Business Mentorship", "Marketing", "Web Development" };
 
     private FirebaseUser user;
     private String uid;
@@ -107,10 +100,11 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
                     .getInstance()
                     .getReference("needs");
 
+
             for (Need need: needArrayList) {
                 String needName = need.getNeed();
                 if (need.getSelected()){
-                    userNeedsRef.child(needName).setValue(needName);
+//                    userNeedsRef.child(needName).setValue(needName);
                     userNeeds.add(needName);
 
                     needsNodeRef.child(needName).child(uid).setValue(uid);
@@ -118,7 +112,9 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
                 if (!need.getSelected()){
                     needsNodeRef.child(needName).child(uid).removeValue();
                 }
+
             }
+            userNeedsRef.setValue(userNeeds);
 
 
 //            getMatches();

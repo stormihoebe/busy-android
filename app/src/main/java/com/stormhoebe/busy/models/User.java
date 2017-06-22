@@ -1,4 +1,4 @@
-package com.stormhoebe.busy;
+package com.stormhoebe.busy.models;
 
 import org.parceler.Parcel;
 
@@ -18,7 +18,7 @@ public class User {
     List<String> needs = new ArrayList<>();
     List<String> offers = new ArrayList<>();
     String image;
-    String tag;
+    String type;
     String location;
     String id;
 
@@ -43,7 +43,7 @@ public class User {
     }
 
     public String getTag() {
-        return tag;
+        return type;
     }
 
     public String getId() {
@@ -87,6 +87,7 @@ public class User {
     }
 
     public void setTag(String tag) {
-        this.tag = tag;
+        this.type = tag;
     }
+
 }

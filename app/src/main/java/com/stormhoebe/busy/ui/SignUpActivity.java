@@ -1,4 +1,4 @@
-package com.stormhoebe.busy;
+package com.stormhoebe.busy.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,9 +21,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.auth.api.model.StringList;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.stormhoebe.busy.R;
+import com.stormhoebe.busy.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

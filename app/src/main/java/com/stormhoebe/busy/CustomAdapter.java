@@ -9,6 +9,8 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.stormhoebe.busy.models.Need;
+
 import java.util.ArrayList;
 
 /**

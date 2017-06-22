@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context="com.stormhoebe.busy.OffersFragment">
+    tools:context="com.stormhoebe.busy.ui.OffersFragment">
 
     <TextView
         android:id="@+id/textView4"

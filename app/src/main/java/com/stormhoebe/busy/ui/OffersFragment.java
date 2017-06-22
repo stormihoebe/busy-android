@@ -1,4 +1,4 @@
-package com.stormhoebe.busy;
+package com.stormhoebe.busy.ui;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -12,8 +12,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.stormhoebe.busy.CustomAdapter;
+import com.stormhoebe.busy.R;
+import com.stormhoebe.busy.models.Need;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Guest on 6/19/17.
@@ -24,9 +28,9 @@ public class OffersFragment extends DialogFragment implements View.OnClickListen
     private ArrayList<Need> offerArrayList;
     private CustomAdapter customAdapter;
     private Button allButton, noneButton, mSubmitButton;
-    private  String[] offersList = new String[]{"Coffee", "Auto Repair", "Laundry", "Delivery", "Accounting", "Web Development", "Interior Decorating", "Catering", "Cleaning Service"};
+    private  String[] offersList = new String[]{"Coffee", "Gelato and Ice Cream", "Prepared Foods", "Catering", "Auto Repair", "Cleaning Service", "Laundry" , "Interior Decorating", "Delivery", "Accounting", "Legal Assistance", "Business Mentorship", "Marketing", "Web Development" };
 
-
+    List<String> userOffers;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -45,6 +49,7 @@ public class OffersFragment extends DialogFragment implements View.OnClickListen
         mSubmitButton.setOnClickListener(this);
         allButton.setOnClickListener(this);
         noneButton.setOnClickListener(this);
+        userOffers = new ArrayList<>();
 
         return rootView;
     }
@@ -69,13 +74,15 @@ public class OffersFragment extends DialogFragment implements View.OnClickListen
             for (Need offer: offerArrayList) {
                 String offerName = offer.getNeed();
                 if (offer.getSelected()){
-                    userOffersRef.child(offerName).setValue(offerName);
+                    userOffers.add(offerName);
                     offersNodeRef.child(offerName).child(uid).setValue(uid);
                 }
                 if (!offer.getSelected()){
                     offersNodeRef.child(offerName).child(uid).removeValue();
                 }
             }
+            userOffersRef.setValue(userOffers);
+
 
             dismiss();
         }

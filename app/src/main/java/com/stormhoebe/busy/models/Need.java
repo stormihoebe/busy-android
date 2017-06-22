@@ -1,4 +1,4 @@
-package com.stormhoebe.busy;
+package com.stormhoebe.busy.models;
 
 import java.util.List;
 

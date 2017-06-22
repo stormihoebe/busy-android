@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.stormhoebe.busy.models.User;
+
+import java.util.List;
 
 /**
  * Created by Guest on 6/20/17.
@@ -24,25 +26,26 @@ public class FirebaseBusinessViewHolder  extends RecyclerView.ViewHolder {
         mContext = itemView.getContext();
     }
 
-    public void bindBusiness(User business, String needOrOffer, String need) {
+    public void bindBusiness(User business) {
         TextView bussinessNameTextView = (TextView) mView.findViewById(R.id.businessNameTextView);
         TextView bussinessTypeTextView = (TextView) mView.findViewById(R.id.businessTypeTextView);
         TextView needOfferTextView = (TextView) mView.findViewById(R.id.needOfferTextView);
-        String needOfferString;
-
+        List<String> offersList = business.getOffers();
+        String offerString = concatStringsWSep(offersList, ", ");
         bussinessNameTextView.setText(business.getName());
         bussinessTypeTextView.setText(business.getTag());
 
-        if (needOrOffer.equals("need")){
-            needOfferString = "Needs " + need;
-            needOfferTextView.setText(needOfferString);
+        needOfferTextView.setText("Offering : " + offerString);
+
+    }
+
+    public static String concatStringsWSep(Iterable<String> strings, String separator) {
+        StringBuilder sb = new StringBuilder();
+        String sep = "";
+        for(String s: strings) {
+            sb.append(sep).append(s);
+            sep = separator;
         }
-        if (needOrOffer.equals("offer")){
-            needOfferString = "Is offering " + need;
-            needOfferTextView.setText(needOfferString);
-        }
-
-
-
+        return sb.toString();
     }
 }
