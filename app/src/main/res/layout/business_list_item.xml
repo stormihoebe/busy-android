@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
+    android:id="@+id/listItemConstraintLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
 
-        android:text="Business Name"
+        android:text=""
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +29,7 @@
         android:layout_width="328dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Business Type"
+        android:text=""
         android:textSize="16sp"
 
         android:layout_marginTop="8dp"
@@ -43,16 +44,13 @@
         android:layout_width="328dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="In need of / offering BLANK"
+        android:text=""
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/businessTypeTextView"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline8"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.constraint.Guideline
         android:layout_width="wrap_content"
@@ -63,10 +61,4 @@
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="172dp" />
 
-    <android.support.constraint.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guideline8"
-        app:layout_constraintGuide_begin="112dp"
-        android:orientation="horizontal" />
 </android.support.constraint.ConstraintLayout>

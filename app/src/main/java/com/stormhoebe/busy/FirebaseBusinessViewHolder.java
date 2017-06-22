@@ -1,6 +1,7 @@
 package com.stormhoebe.busy;
 
 import android.content.Context;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -26,16 +27,24 @@ public class FirebaseBusinessViewHolder  extends RecyclerView.ViewHolder {
         mContext = itemView.getContext();
     }
 
-    public void bindBusiness(User business) {
+    public void bindBusiness(User business, boolean showOrNot) {
         TextView bussinessNameTextView = (TextView) mView.findViewById(R.id.businessNameTextView);
         TextView bussinessTypeTextView = (TextView) mView.findViewById(R.id.businessTypeTextView);
         TextView needOfferTextView = (TextView) mView.findViewById(R.id.needOfferTextView);
-        List<String> offersList = business.getOffers();
-        String offerString = concatStringsWSep(offersList, ", ");
-        bussinessNameTextView.setText(business.getName());
-        bussinessTypeTextView.setText(business.getTag());
+//        if(showOrNot) {
+            List<String> offersList = business.getOffers();
+            String offerString = concatStringsWSep(offersList, ", ");
+            bussinessNameTextView.setText(business.getName());
+            bussinessTypeTextView.setText(business.getTag());
+            needOfferTextView.setText("Offering : " + offerString);
+//        }
+//        if(!showOrNot){
+//            bussinessNameTextView.setVisibility(View.GONE);
+//            bussinessTypeTextView.setVisibility(View.GONE);
+//            needOfferTextView.setVisibility(View.GONE);
+//
+//        }
 
-        needOfferTextView.setText("Offering : " + offerString);
 
     }
 
