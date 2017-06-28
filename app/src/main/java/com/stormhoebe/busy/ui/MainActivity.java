@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void getUsersForNeeds(List<String> userNeeds) {
-        Log.d("I AM GOING TO ", "get users for needs!");
         userList = new ArrayList<>();
 
         //for each need in user need list, check offers node for that need and get users who are offering
@@ -108,8 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         userList.add(dataSnapshot.getKey());
-                        Log.d("FIRST userList Size", userList.size()+"");
-
                         setUserList(userList);
                     }
 

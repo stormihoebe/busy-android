@@ -39,17 +39,13 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
 
     public OnSubmitButtonSelectedListener mCallback;
 
+    //OnSubmitButtonSelectedListener interface allows Fragment to pass needs list to Activity.
     public interface OnSubmitButtonSelectedListener {
         public void onNeedsSelected(List<String> needsList);
     }
 
-    public static  NeedsFragment newInstance (OnSubmitButtonSelectedListener mCallback){
-        NeedsFragment newFragment = new NeedsFragment();
-        return newFragment;
-    }
 
-
-
+    // Creating Dialogue fragment view.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -89,13 +85,17 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (v == mSubmitButton){
+
+            //instantiate reference of needs node as a child of user.
             DatabaseReference userNeedsRef = FirebaseDatabase
                     .getInstance()
                     .getReference("users")
                     .child(uid).child("needs");
 
+            // remove the value of needs node, delete current array
             userNeedsRef.removeValue();
 
+            // instantiate reference of needs node (not as a child of the user)
             DatabaseReference needsNodeRef = FirebaseDatabase
                     .getInstance()
                     .getReference("needs");
@@ -104,9 +104,7 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
             for (Need need: needArrayList) {
                 String needName = need.getNeed();
                 if (need.getSelected()){
-//                    userNeedsRef.child(needName).setValue(needName);
                     userNeeds.add(needName);
-
                     needsNodeRef.child(needName).child(uid).setValue(uid);
                 }
                 if (!need.getSelected()){
@@ -117,13 +115,12 @@ public class NeedsFragment extends DialogFragment implements View.OnClickListene
             userNeedsRef.setValue(userNeeds);
 
 
-//            getMatches();
-
-
             mCallback.onNeedsSelected(userNeeds);
 
             dismiss();
         }
+
+
         if (v == allButton) {
             needArrayList = getNeed(true);
             customAdapter = new CustomAdapter(getActivity(), needArrayList);
