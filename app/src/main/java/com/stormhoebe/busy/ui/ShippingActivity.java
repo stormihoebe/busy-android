@@ -54,19 +54,17 @@ public class ShippingActivity extends AppCompatActivity {
             @Override
                     protected  void populateViewHolder(FirebaseBusinessViewHolder viewHolder, User model, int position){
 
-                for (String businessID : usersList) {
-                    if (businessID.equals(model.getId())) {
-                        viewHolder.bindBusiness(model, true);
-                    }
-//                    if (!businessID.equals(model.getId())){
-//                        viewHolder.bindBusiness(model, false);
-//                    }
+                        for (String businessID : usersList) {
+                            if (businessID.equals(model.getId())){
+                                viewHolder.bindBusiness(model, true);
+                            }
+//                            if(!businessID.equals(model.getId())){
+//                                viewHolder.bindBusiness(model, false);
+//                            }
+                        }
 
                 }
 
-
-
-            }
         };
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
