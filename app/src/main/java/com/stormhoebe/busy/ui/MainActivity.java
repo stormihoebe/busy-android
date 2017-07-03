@@ -35,11 +35,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Bind(R.id.findPartnersButton) Button mFindPartnersButton;
 
     private FirebaseUser user;
-
+    private String uid;
     private DatabaseReference offersRef;
     private List<String> userNeeds;
     private List<String> userList;
     private String[] userArray;
+    private  DatabaseReference usersOfferingWhatCurrentUserNeedsRef;
 
 
     @Override
@@ -53,12 +54,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mOfferButton.setOnClickListener(this);
         mFindPartnersButton.setOnClickListener(this);
         user =  FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
+        uid = user.getUid();
 
         offersRef = FirebaseDatabase.getInstance().getReference("offers");
+        usersOfferingWhatCurrentUserNeedsRef = FirebaseDatabase.getInstance().getReference("users").child(uid).child("UsersOfferingMatch");
+
 
         userNeeds = new ArrayList<>();
-        userList= new ArrayList<>();
         userArray = new String[0];
 
     }
@@ -97,7 +99,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //for each need in user need list, check offers node for that need and get users who are offering
         for (String need : userNeeds) {
-
 
             if (offersRef.child(need)!= null){
 
@@ -140,7 +141,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setUserList(List<String> users) {
         userList = users;
         userArray = userList.toArray(new String[userList.size()]);
+        usersOfferingWhatCurrentUserNeedsRef.removeValue();
+        updateDatabaseWithUserList(users);
 
+    }
+    public void updateDatabaseWithUserList(List<String> users){
+        usersOfferingWhatCurrentUserNeedsRef.setValue(users);
     }
 
     //// TODO: 6/19/17  (Day 1) Where I'm at: The app currently has the ability to update users needs and offers.

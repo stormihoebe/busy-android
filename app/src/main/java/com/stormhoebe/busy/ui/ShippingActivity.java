@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,19 +50,17 @@ public class ShippingActivity extends AppCompatActivity {
     }
 
     private void setUpFirebaseAdapter() {
-        mFirebaseAdapter = new FirebaseRecyclerAdapter<User, FirebaseBusinessViewHolder>
-                (User.class, R.layout.business_list_item, FirebaseBusinessViewHolder.class, mUserReference){
+         mFirebaseAdapter = new FirebaseIndexRecyclerAdapter<User, FirebaseBusinessViewHolder>(
+                User.class,
+                R.layout.business_list_item,
+                FirebaseBusinessViewHolder.class,
+                FirebaseDatabase.getInstance().getReference("users").child(uid).child("UsersOfferingMatch"),
+                FirebaseDatabase.getInstance().getReference("users")) {
             @Override
                     protected  void populateViewHolder(FirebaseBusinessViewHolder viewHolder, User model, int position){
 
-                        for (String businessID : usersList) {
-                            if (businessID.equals(model.getId())){
+
                                 viewHolder.bindBusiness(model, true);
-                            }
-//                            if(!businessID.equals(model.getId())){
-//                                viewHolder.bindBusiness(model, false);
-//                            }
-                        }
 
                 }
 
