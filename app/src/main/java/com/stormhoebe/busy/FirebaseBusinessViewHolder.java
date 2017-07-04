@@ -35,13 +35,17 @@ public class FirebaseBusinessViewHolder  extends RecyclerView.ViewHolder impleme
         TextView bussinessNameTextView = (TextView) mView.findViewById(R.id.businessNameTextView);
         TextView bussinessTypeTextView = (TextView) mView.findViewById(R.id.businessTypeTextView);
         TextView needOfferTextView = (TextView) mView.findViewById(R.id.needOfferTextView);
+        TextView needNeedTextView = (TextView) mView.findViewById(R.id.needNeedTextView);
         heartImageView = (ImageView) mView.findViewById(R.id.heartImageView);
         heartImageView.setOnClickListener(this);
             List<String> offersList = business.getOffers();
             String offerString = concatStringsWSep(offersList, ", ");
+            List<String> needsList = business.getNeeds();
+            String needString = concatStringsWSep(needsList, ", ");
             bussinessNameTextView.setText(business.getName());
             bussinessTypeTextView.setText(business.getTag());
             needOfferTextView.setText("Offering : " + offerString);
+            needNeedTextView.setText("In Search Of : " + needString );
 
 
 
