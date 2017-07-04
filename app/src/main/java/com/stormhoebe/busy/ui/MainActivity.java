@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
     public void updateDatabaseWithUserList(List<String> users){
-        usersOfferingWhatCurrentUserNeedsRef.setValue(users);
+        for(String user : users) {
+            usersOfferingWhatCurrentUserNeedsRef.child(user).setValue(user);
+        }
     }
 
     //// TODO: 6/19/17  (Day 1) Where I'm at: The app currently has the ability to update users needs and offers.

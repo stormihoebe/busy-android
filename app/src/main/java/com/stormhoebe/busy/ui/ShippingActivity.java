@@ -15,8 +15,10 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.stormhoebe.busy.FirebaseBusinessViewHolder;
 import com.stormhoebe.busy.R;
+import com.stormhoebe.busy.database.FirebaseIndexRecyclerAdapter;
 import com.stormhoebe.busy.models.User;
 
 import java.util.Arrays;
@@ -27,10 +29,14 @@ import butterknife.ButterKnife;
 
 public class ShippingActivity extends AppCompatActivity {
     private DatabaseReference mUserReference;
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
+    private FirebaseIndexRecyclerAdapter mFirebaseAdapter;
 
     private String[] usersArray;
     private List<String> usersList;
+
+    private String uid;
+
+    private DatabaseReference getUsersOfferingMatchQuery;
 
     @Bind(R.id.mRecyclerView) RecyclerView mRecyclerView;
 
@@ -39,6 +45,8 @@ public class ShippingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping);
         ButterKnife.bind(this);
+
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         Intent intent = getIntent();
         usersArray = intent.getStringArrayExtra("userList");
@@ -50,16 +58,18 @@ public class ShippingActivity extends AppCompatActivity {
     }
 
     private void setUpFirebaseAdapter() {
+        Log.d("I did it", "setUpFirebaseAdapter");
+
+        getUsersOfferingMatchQuery = FirebaseDatabase.getInstance().getReference("users").child(uid).child("UsersOfferingMatch");
          mFirebaseAdapter = new FirebaseIndexRecyclerAdapter<User, FirebaseBusinessViewHolder>(
                 User.class,
                 R.layout.business_list_item,
                 FirebaseBusinessViewHolder.class,
-                FirebaseDatabase.getInstance().getReference("users").child(uid).child("UsersOfferingMatch"),
+                 getUsersOfferingMatchQuery,
                 FirebaseDatabase.getInstance().getReference("users")) {
             @Override
                     protected  void populateViewHolder(FirebaseBusinessViewHolder viewHolder, User model, int position){
-
-
+                                Log.d("I did it", "POPULATEVIEWHOLDER");
                                 viewHolder.bindBusiness(model, true);
 
                 }
