@@ -58,8 +58,7 @@ public class ShippingActivity extends AppCompatActivity {
     }
 
     private void setUpFirebaseAdapter() {
-        Log.d("I did it", "setUpFirebaseAdapter");
-
+        Log.d("usersArray Activity: ", usersList.toString());
         getUsersOfferingMatchQuery = FirebaseDatabase.getInstance().getReference("users").child(uid).child("UsersOfferingMatch");
          mFirebaseAdapter = new FirebaseIndexRecyclerAdapter<User, FirebaseBusinessViewHolder>(
                 User.class,
@@ -67,13 +66,10 @@ public class ShippingActivity extends AppCompatActivity {
                 FirebaseBusinessViewHolder.class,
                  getUsersOfferingMatchQuery,
                 FirebaseDatabase.getInstance().getReference("users")) {
-            @Override
+                     @Override
                     protected  void populateViewHolder(FirebaseBusinessViewHolder viewHolder, User model, int position){
-                                Log.d("I did it", "POPULATEVIEWHOLDER");
-                                viewHolder.bindBusiness(model, true);
-
+                                viewHolder.bindBusiness(model);
                 }
-
         };
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
